@@ -1,4 +1,5 @@
 import React from "react";
+import "./style.css";
 
 export function InputDiv (props) {
     return (
@@ -18,10 +19,10 @@ export function Input(props) {
     );
 }
 
-export function FormBtn(props) {
+export function FormBtn({ onClick, children }) {
     return (
-      <button {...props} style={{ float: "right", marginBottom: 10 }} className="btn btn-success">
-        {props.children}
+      <button onClick={onClick}  style={{ float: "right", marginBottom: 10 }} className="btn btn-success">
+        {children}
       </button>
     );
 }

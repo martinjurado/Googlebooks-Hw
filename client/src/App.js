@@ -2,7 +2,7 @@ import React from 'react';
 import Saved from "./pages/Saved";
 import Search from "./pages/Search";
 import { BrowserRouter as Router, Route} from "react-router-dom";
-import Nav from "./components/Nav"
+import Nav from "./components/Nav";
 
 
 function App() {
