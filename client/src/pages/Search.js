@@ -2,7 +2,7 @@ import React, { Component } from "react";
 import { Container, Row } from "../components/Containers";
 import Jumbotron from "../components/Jumbotron";
 import { InputDiv, Input, FormBtn } from "../components/Form";
-import { BookItems } from "../components/BookDetails";
+import BookItems from "../components/BookDetails/";
 import API from "../utils/API";
 
 class Search extends Component {
@@ -12,9 +12,9 @@ class Search extends Component {
         bookSearch: ""
     };
 
-    componentDidMount() {
-        this.searchBook("Harry Potter")
-    }
+    // componentDidMount() {
+    //     this.searchBook()
+    // }
 
     handleInputChange = event => {
 
@@ -26,9 +26,9 @@ class Search extends Component {
 
     searchBook = query => {
         API.getBooks(query)
-        .then(res => this.setState({books: res.data}))
+        .then(res => this.setState({books:res.data.items}))
         .catch(err => console.log(err))
-    }
+    };
 
     handleFormSubmit = event => {
         event.preventDefault()
@@ -57,22 +57,32 @@ class Search extends Component {
                         >
                             Search
                         </FormBtn>
+                        
                         </InputDiv>
-                        <div>
+                        
+                        </Row>
+                        
+                        
+                        <ul>
+                            <BookItems
+                              title = {this.state.books.title}  
+                            />
+                            
                         {this.state.books.map(book => {
                             return(
-                                <BookItems 
-                                    key = {book.title} 
-                                    title = {book.title}
-                                    author = {book.author}
-                                    description = {book.description}
-                                />
-                            )
+                                <BookItems
+                                key={book.id}
+                                title = {book.volumeInfo.title}
+                                thumbnail = {book.volumeInfo.imageLinks.smallThumbnail}
+                                description = {book.volumeInfo.description}
+                                authors = {book.volumeInfo.authors}
+                                href = {book.volumeInfo.infoLink}
+                               />
+                            );
                         })}
-                        </div>
-                    
-
-                </Row>
+                        
+                        </ul>    
+                
             </Container>
         )
     }
