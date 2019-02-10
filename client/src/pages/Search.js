@@ -61,12 +61,6 @@ class Search extends Component {
                         </InputDiv>
                         
                         </Row>
-                        
-                        
-                        <ul>
-                            <BookItems
-                              title = {this.state.books.title}  
-                            />
                             
                         {this.state.books.map(book => {
                             return(
@@ -80,8 +74,6 @@ class Search extends Component {
                                />
                             );
                         })}
-                        
-                        </ul>    
                 
             </Container>
         )
