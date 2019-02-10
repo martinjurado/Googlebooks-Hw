@@ -16,7 +16,7 @@ const BookItems = (props) => {
             <h5>{props.title}</h5>
             <h6>{props.authors}</h6>
             <p className="bookdesc">{props.description}</p>
-            <a href={props.href} target="_blank" rel="noopener noreferrer" className="link">Go to Book</a>
+            <a href={props.href} target="_blank" rel="noopener noreferrer" className="link"><button class="btn btn-secondary">Go to Book</button></a>
             <br></br>
         </div>
     )
