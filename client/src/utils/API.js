@@ -1,8 +1,10 @@
 import axios from "axios";
-const BASEURL = "https://www.googleapis.com/books/v1/volumes?q=";
 
 export default {
-  getBooks: function(query) {
-    return axios.get(BASEURL + query);
+  getBooks: function(q) {
+    return axios.get("/api/google", { params: { q: "title:" + q } });
+  },
+  saveBook: function(bookData) {
+    return axios.post("/api/books", bookData);
   }
 };

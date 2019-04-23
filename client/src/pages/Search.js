@@ -1,83 +1,87 @@
 import React, { Component } from "react";
 import { Container, Row } from "../components/Containers";
-import Jumbotron from "../components/Jumbotron";
 import { InputDiv, Input, FormBtn } from "../components/Form";
 import BookItems from "../components/BookDetails/";
+import Header from "../components/Header";
 import API from "../utils/API";
 
 class Search extends Component {
+  state = {
+    books: [],
+    bookSearch: ""
+  };
 
-    state = {
-        books: [],
-        bookSearch: ""
-    };
+  handleInputChange = event => {
+    const { name, value } = event.target;
+    this.setState({
+      [name]: value
+    });
+  };
 
-    // componentDidMount() {
-    //     this.searchBook()
-    // }
+  searchBook = () => {
+    API.getBooks(this.state.bookSearch)
+      .then(res => this.setState({ books: res.data }))
+      .catch(err => console.log(err));
+  };
 
-    handleInputChange = event => {
+  handleFormSubmit = event => {
+    event.preventDefault();
+    this.searchBook();
+  };
 
-        const { name, value } = event.target;
-        this.setState({
-            [name]: value
-        });
-    };
+  saveBooks = id => {
+    const book = this.state.books.find(book => book.id === id);
+    API.saveBook({
+      googleId: book.id,
+      title: book.volumeInfo.title,
+      link: book.volumeInfo.infoLink,
+      authors: book.volumeInfo.authors,
+      description: book.volumeInfo.description,
+      image: book.volumeInfo.imageLinks.thumbnail
+    }).then(() => this.getBooks());
+  };
 
-    searchBook = query => {
-        API.getBooks(query)
-        .then(res => this.setState({books:res.data.items}))
-        .catch(err => console.log(err))
-    };
+  render() {
+    console.log(this.state);
+    return (
+      <Container fluid>
+        <Row>
+          <Header />
+          <InputDiv>
+            <form>
+              <Input
+                name="bookSearch"
+                value={this.state.bookSearch}
+                onChange={this.handleInputChange}
+              />
+            </form>
+            <FormBtn onClick={this.handleFormSubmit}>Search</FormBtn>
+          </InputDiv>
+        </Row>
 
-    handleFormSubmit = event => {
-        event.preventDefault()
-        this.searchBook(this.state.bookSearch)
-    }
-
-    render() {
-        return (
-            <Container fluid>
-                <Row>
-                    <Jumbotron>
-                        <img alt="logo" id="logo" src="https://vignette.wikia.nocookie.net/logopedia/images/4/47/Google_Book_Search_Beta_logo.png/revision/latest?cb=20110819081231"></img>
-                        <h3>Search for and Save Books of Interest</h3>
-                    </Jumbotron>
-                    <InputDiv>
-                        <form>
-                            <Input
-                                name="bookSearch"
-                                value={this.state.bookSearch}
-                                onChange={this.handleInputChange}
-                            />
-
-                        </form>
-                        <FormBtn
-                            onClick={this.handleFormSubmit}
-                        >
-                            Search
-                        </FormBtn>
-                        
-                        </InputDiv>
-                        
-                        </Row>
-                            
-                        {this.state.books.map(book => {
-                            return(
-                                <BookItems
-                                key={book.id}
-                                title = {book.volumeInfo.title}
-                                thumbnail = {book.volumeInfo.imageLinks.smallThumbnail}
-                                description = {book.volumeInfo.description}
-                                authors = {book.volumeInfo.authors}
-                                href = {book.volumeInfo.infoLink}
-                               />
-                            );
-                        })}
-                
-            </Container>
-        )
-    }
+        {this.state.books.map(book => {
+          return (
+            <BookItems
+              key={book.id}
+              title={book.volumeInfo.title}
+              image={book.volumeInfo.imageLinks.thumbnail}
+              description={book.volumeInfo.description}
+              authors={book.volumeInfo.authors.join(", ")}
+              link={book.volumeInfo.infoLink}
+              Button={() => (
+                <button
+                  onClick={() => this.saveBooks(book.id)}
+                  className="btn btn-primary ml-2"
+                >
+                  Save
+                </button>
+              )}
+            />
+          );
+        })}
+      </Container>
+    );
+  }
 }
 
 export default Search;
